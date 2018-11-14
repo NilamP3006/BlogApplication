@@ -1,0 +1,73 @@
+apply plugin: 'java'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'eclipse'
+apply plugin: 'com.benjaminsproule.swagger'
+
+buildscript {
+    repositories {
+        jcenter()
+        maven { url 'http://repo.spring.io/snapshot' }
+        maven { url 'http://repo.spring.io/milestone' }
+    }
+    dependencies {
+        classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.5.3.RELEASE'
+		classpath 'com.benjaminsproule:swagger-gradle-plugin:0.0.6'
+    }
+}
+
+jar {
+    baseName = 'swagger-example'
+    version =  '0.0.1-SNAPSHOT'
+}
+
+repositories {
+    jcenter()
+    maven { url "http://repo.spring.io/snapshot" }
+    maven { url "http://repo.spring.io/milestone" }
+}
+
+dependencies {
+	compile("org.springframework.boot:spring-boot-devtools")
+    compile("org.springframework.boot:spring-boot-starter-web")
+	compile("org.springframework.boot:spring-boot-starter-data-jpa")
+	compile("org.springframework.boot:spring-boot-starter-security")
+	compile("io.springfox:springfox-swagger2:2.6.1")
+	compile("io.springfox:springfox-swagger-ui:2.6.1")
+	compile("com.h2database:h2")
+	
+    testCompile("org.springframework.boot:spring-boot-starter-test")
+	testCompile("org.springframework.security:spring-security-test")
+}
+
+swagger {
+	apiSource {
+		springmvc = true
+		locations = 'eu.balev.demo.swagger'
+		basePath = '/api'
+		info {
+			title = 'BlogApplication API'
+			description = 'The super heroic blog API.'
+			version = '1.0'
+			contact {
+				email = 'someone@example-rest-api.com'
+				name = 'Nilam Pakhare'
+				url = 'http://test'
+			}
+			license {
+				url = 'http://www.apache.org/licenses/LICENSE-2.0.html'
+				name = 'Apache 2.0'
+			}
+		}
+		securityDefinition {
+			name = 'Basic Authentication'
+			type = 'basic'
+		}
+		swaggerDirectory = "${project.rootDir}/generated/swagger-json"
+		swaggerApiReader = 'com.github.kongchen.swagger.docgen.reader.SpringMvcApiReader'
+		modelConverters = [ 'io.swagger.validator.BeanValidator' ]
+	}
+}
+
+test {
+	systemProperty 'SWAGGER_TEST_OUTPUT_DIR', "${project.rootDir}/generated/swagger-test"
+}
