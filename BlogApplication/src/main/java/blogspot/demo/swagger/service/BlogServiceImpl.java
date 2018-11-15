@@ -28,7 +28,7 @@ public class BlogServiceImpl implements BlogService {
 	public Blog udpateBlog(Blog blogDTO) {
 		
 		Blog existingBlog = requireNotNull(blogRepository.findOne(blogDTO.getId()), blogDTO.getId());
-		
+		//
 		existingBlog.setName(blogDTO.getName());
 		
 		return  blogRepository.save(existingBlog);
